@@ -3,11 +3,12 @@ import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class DesOfuscador {
 
 	// Permutación directa vPR
-	final int[] vPR = { 65, 54, 19, 98, 168, 33, 110, 187, 244, 22, 204, 4, 127, 100, 232, 93, 30, 242, 203, 42, 116,
+	final static int[] vPR = { 65, 54, 19, 98, 168, 33, 110, 187, 244, 22, 204, 4, 127, 100, 232, 93, 30, 242, 203, 42, 116,
 			197, 94, 53, 210, 149, 71, 158, 150, 45, 154, 136, 76, 125, 132, 63, 219, 172, 49, 182, 72, 95, 246, 196,
 			216, 57, 139, 231, 35, 59, 56, 142, 200, 193, 223, 37, 177, 32, 165, 70, 96, 78, 156, 251, 170, 211, 86, 81,
 			69, 124, 85, 0, 7, 201, 43, 157, 133, 155, 9, 160, 143, 173, 179, 15, 99, 171, 137, 75, 215, 167, 21, 90,
@@ -22,7 +23,7 @@ public class DesOfuscador {
 
 	// Permutación inversa vPR[vPI[i]] = i, vPI[vPR[i]] = i
 
-	final int[] vPI = { 71, 241, 180, 230, 11, 106, 114, 72, 133, 78, 158, 235, 226, 248, 148, 83, 224, 187, 160, 2,
+	final static int[] vPI = { 71, 241, 180, 230, 11, 106, 114, 72, 133, 78, 158, 235, 226, 248, 148, 83, 224, 187, 160, 2,
 			232, 90, 9, 171, 219, 227, 186, 198, 124, 195, 16, 221, 57, 5, 150, 48, 245, 55, 96, 130, 140, 201, 19, 74,
 			107, 29, 243, 251, 143, 38, 151, 202, 145, 23, 1, 196, 50, 45, 110, 49, 149, 255, 217, 35, 209, 0, 94, 121,
 			220, 68, 59, 26, 40, 197, 97, 87, 32, 144, 61, 131, 185, 67, 190, 103, 210, 70, 66, 118, 192, 109, 91, 126,
@@ -36,7 +37,7 @@ public class DesOfuscador {
 
 	// Autopermutación vPS[vPS[i]] = i
 
-	final int[] vPS = { 20, 83, 15, 86, 179, 200, 122, 156, 235, 101, 72, 23, 22, 21, 159, 2, 204, 84, 124, 131, 0, 13,
+	final static int[] vPS = { 20, 83, 15, 86, 179, 200, 122, 156, 235, 101, 72, 23, 22, 21, 159, 2, 204, 84, 124, 131, 0, 13,
 			12, 11, 162, 98, 168, 118, 219, 217, 237, 199, 197, 164, 220, 172, 133, 116, 214, 208, 167, 155, 174, 154,
 			150, 113, 102, 195, 99, 153, 184, 221, 115, 146, 142, 132, 125, 165, 94, 209, 93, 147, 177, 87, 81, 80, 128,
 			137, 82, 148, 79, 78, 10, 107, 188, 141, 127, 110, 71, 70, 65, 64, 68, 1, 17, 203, 3, 63, 247, 244, 225,
@@ -49,20 +50,48 @@ public class DesOfuscador {
 			189, 192, 191, 8, 151, 30, 108, 226, 97, 224, 198, 193, 89, 171, 187, 88, 222, 95, 223, 96, 121, 126, 178,
 			138 };
 	
+	public static void algoritmo(ArrayList<Short> txt, int clave){
+		int w0,w1,b;
+		short c;
+		for(int i=0;i<(txt.size() -1);i++ ){
+			w0 = clave % 256;
+			w1 = clave / 256;
+			b = (int) txt.get(i);
+			b = (b+w0) % 256;
+			
+			b = vPR[b]; 
+			b = (b+w1) % 256;
+			
+			b = vPS[b]; 
+			b = (b-w1+256) % 256;
+			
+			b = vPI[b]; 
+			b = (b-w0+256) % 256 ;
+			
+			c = (short)b;
+			txt.add(i,c);
+			
+			
+		}
+		
+	}
 	
 	public static void main(String[] args) {
 		//short[] leido = null; //Donde guardamos los short
+		ArrayList<Short> leido = new ArrayList<Short>();
         FileInputStream fis = null;
         DataInputStream entrada = null;
         int filas, columnas, i, j;
+        int clave = 0;
         try {
-            fis = new FileInputStream("prueba2.mbx");
+            fis = new FileInputStream("prueba1.mbx");
             entrada = new DataInputStream(fis);
-            filas = entrada.readInt();  //se lee el primer entero del fichero
-            columnas = entrada.readInt();//se lee el segundo entero del fichero
+            filas = entrada.readUnsignedByte();  //se lee el primer byte del fichero
+            columnas = entrada.readUnsignedByte();//se lee el segundo byte del fichero
             for (i = 0; i < filas; i++) {
                 for (j = 0; j < columnas; j++) {  // se leen los double y se muestran por pantalla
-                    System.out.println(entrada.readChar());
+                    System.out.println((short)entrada.readUnsignedByte());
+                    leido.add((short) entrada.readUnsignedByte());
                 }
                 System.out.println();
             }	
@@ -84,6 +113,10 @@ public class DesOfuscador {
                 System.out.println(e.getMessage());
             }
         }
+        //for (clave = 0; clave<=65536;clave ++){
+        	//algoritmo(leido,clave);
+        	
+        //}
     }
 
 	
