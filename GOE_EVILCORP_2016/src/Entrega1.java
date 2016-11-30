@@ -204,8 +204,10 @@ public class Entrega1 {
     public static void main(String[] args){
 
         int i;
+        
+        long ini, fin;
         String cadena = "evil.corp@mad.org";
-        String fichero = "prueba1.mbx";
+        String fichero = "prueba2.mbx";
 
         short[] cadenaA = new short[cadena.length()];
 
@@ -217,7 +219,9 @@ public class Entrega1 {
 
         short[] leido = new short[txt.size()];
         short[] ofuscado = new short[txt.size()];
-
+        
+        ini = System.currentTimeMillis();
+        
         for (i=0; i<txt.size(); i++){
             leido[i] = txt.get(i);
         }
@@ -227,6 +231,9 @@ public class Entrega1 {
             ofuscado = algoritmo(copia(leido),i);
             buscar(ofuscado, cadenaA);
         }
+        
+        fin = System.currentTimeMillis();
+        System.out.println("\n \nHa tardado " + (fin - ini) / 1000 + " segundos");
 
 
     }

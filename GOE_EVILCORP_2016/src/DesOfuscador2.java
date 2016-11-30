@@ -257,6 +257,7 @@
 	            if (posicion != -1){
 	                trozo = cortar(copia(leido), posicion, cadenaA.length);
 	                trozo_ofus = algoritmo(copia(trozo),i);
+	                System.out.println(posicion);
 	                System.out.println(vec2str(trozo_ofus,0,trozo_ofus.length));
 	            }
 	        }

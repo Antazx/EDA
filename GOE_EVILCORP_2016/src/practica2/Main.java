@@ -2,6 +2,10 @@ package practica2;
 
 
 
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -19,6 +23,9 @@ public class Main {
 
 		System.out.println("\nIntroduzca la clave a buscar.");
 		String clave = sc.nextLine();
+		
+	       
+		
 
 		long comienzo, fin;
 
